@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+    <body>
+        <p>Game {{ game.slug }} has {{ card_count }} cards
+        <a href="{% url 'game' game.slug %}">Refresh</a></p>
+
+        <form method="POST" action="{% url 'add_cards' game_id=game.slug %}">
+        <textarea name="cards" placeholder="One name per line"></textarea>
+        <input type="submit"></input>
+        {% csrf_token %}
+        </form>
+
+        <a href="{% url 'game' game_id=game.slug %}">Start game</a>
+    </body>
+</html>
