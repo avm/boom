@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'channels',
+    'game',
 ]
 
 MIDDLEWARE = [
@@ -120,4 +121,4 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-ASGI_APPLICATION = "myproject.routing.application"
+ASGI_APPLICATION = "boom.routing.application"
