@@ -14,6 +14,9 @@ class Game(models.Model):
         default=State.POPULATING,
     )
 
+    def card_count(self):
+        return self.card_set.all().count()
+
 
 class Score(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE)

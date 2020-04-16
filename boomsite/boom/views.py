@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
+from django.contrib import messages
 from .models import Game, Card
 
 import random
@@ -20,9 +21,13 @@ def add_cards(request, game_id):
 			(line.strip() for line in text.split('\n'))
 			if name != ''
 	])
-	return redirect('game', game_id=game_id)
+	return redirect('game', game_id)
 
 def start_game(request, game_id):
 	game, created = Game.objects.get_or_create(slug=game_id)
-	if game.state == Game.State.POPULATING:
+	if game.card_count() < 40:
+		messages.add_message(request, messages.ERROR, 'Not enough cards to start game.')
+	elif game.state == Game.State.POPULATING:
 		game.state = Game.State.PLAYING
+		game.save()
+	return redirect('game', game_id)

@@ -1,6 +1,14 @@
 <!doctype html>
 <html>
     <body>
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
         <p>Game {{ game.slug }} has {{ game.card_set.all.count }} cards
         <a href="{% url 'game' game.slug %}">Refresh</a></p>
 
@@ -10,6 +18,6 @@
         {% csrf_token %}
         </form>
 
-        <a href="{% url 'game' game_id=game.slug %}">Start game</a>
+        <a href="{% url 'start_game' game_id=game.slug %}">Start game</a>
     </body>
 </html>
