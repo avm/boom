@@ -2,8 +2,68 @@
 
 {% block content %}
     {{ game.get_active_cards | json_script:"cards" }}
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+
+    {% verbatim %}
+    <div id="app">
+        <p>Time left: {{ seconds_left }}</p>
+        <button v-show="!playing" v-on:click="start" id="start">Start</button>
+        <div v-show="playing">
+            <div style="font-size: 32px">{{ current_card.name }}</div>
+            <button v-on:click="next" id="next">Next</button>
+        </div>
+    </div>
+    {% endverbatim %}
+
     <script language="javascript">
         var cards = JSON.parse(document.getElementById('cards').textContent);
-        alert(JSON.stringify(cards));
+        var app = new Vue({
+          el: '#app',
+          data: {
+              playing: false,
+              current_card: 'Incognito',
+              seconds_left: 60,
+              deadline: null,
+              timer: null,
+          },
+          methods: {
+              start: function() {
+                  cards.reverse();
+                  this.next_card();
+                  this.playing = true;
+                  Vue.nextTick(() => {
+                      document.getElementById('next').focus();
+                  });
+                  this.seconds_left = 60;
+                  this.deadline = Date.now() + 60000;
+
+                  this.timer = setInterval(() => {
+                      var now = Date.now();
+                      if (now >= this.deadline) {
+                          this.stop();
+                      } else {
+                          this.seconds_left = Math.ceil((this.deadline - Date.now()) / 1000);
+                      }
+                  }, 200);
+              },
+              stop: function() {
+                  this.playing = false;
+                  if (this.timer) {
+                      clearInterval(this.timer);
+                      this.timer = null;
+                      this.seconds_left = 0;
+                  }
+              },
+              next: function() {
+                  fetch('/win/{{ our_team }}/' + this.current_card.id);
+                  this.next_card();
+              },
+              next_card: function() {
+                  if (cards.length > 0) {
+                      this.current_card = cards.pop();
+                  }
+              },
+          },
+        });
     </script>
 {% endblock %}

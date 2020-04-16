@@ -1,5 +1,6 @@
 from django.db import models
 import json
+import random
 
 
 class Game(models.Model):
@@ -23,6 +24,13 @@ class Game(models.Model):
         last_id = scores[-1].team_id if scores else 0
         scores.append({'team_id': last_id+1, 'value': 0})
         return scores
+
+    def start_set(self):
+        cards = self.card_set.all()
+        for c in cards:
+            c.order = random.randint(1, 1<<20)
+            c.winning_team = 0
+        Card.objects.bulk_update(cards, ['order', 'winning_team'])
 
     def get_active_cards(self):
         return list(self.card_set.filter(winning_team=0).order_by('order').values('id', 'name'))
