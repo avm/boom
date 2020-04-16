@@ -11,7 +11,11 @@ def index(request):
 
 def game(request, game_id):
 	game, created = Game.objects.get_or_create(slug=game_id)
-	return render(request, 'boom/game.html', {'game': game})
+	if game.state == Game.State.PLAYING:
+		template_name = 'boom/stats.html'
+	else:
+		template_name = 'boom/game.html'
+	return render(request, template_name, {'game': game})
 
 def add_cards(request, game_id):
 	game, created = Game.objects.get_or_create(slug=game_id)
@@ -31,3 +35,7 @@ def start_game(request, game_id):
 		game.state = Game.State.PLAYING
 		game.save()
 	return redirect('game', game_id)
+
+def start_round(request, game_id, team_id):
+	game = get_object_or_404(Game, slug=game_id)
+	return render(request, 'boom/round.html', {'game': game})

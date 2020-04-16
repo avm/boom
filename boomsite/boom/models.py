@@ -1,4 +1,5 @@
 from django.db import models
+import json
 
 
 class Game(models.Model):
@@ -16,6 +17,15 @@ class Game(models.Model):
 
     def card_count(self):
         return self.card_set.all().count()
+
+    def get_scores(self):
+        scores = list(self.score_set.all().order_by('team_id').values())
+        last_id = scores[-1].team_id if scores else 0
+        scores.append({'team_id': last_id+1, 'value': 0})
+        return scores
+
+    def get_active_cards(self):
+        return json.dumps(list(self.card_set.filter(winning_team=0).order_by('order').values('id', 'name')))
 
 
 class Score(models.Model):
