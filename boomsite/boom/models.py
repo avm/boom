@@ -25,7 +25,7 @@ class Game(models.Model):
         return scores
 
     def get_active_cards(self):
-        return json.dumps(list(self.card_set.filter(winning_team=0).order_by('order').values('id', 'name')))
+        return list(self.card_set.filter(winning_team=0).order_by('order').values('id', 'name'))
 
 
 class Score(models.Model):

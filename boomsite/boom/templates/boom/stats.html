@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+    <body>
+        {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+        <ul>
+        {% for score in game.get_scores %}
+            <li>
+                <form method="POST" action="{% url 'start_round' game.slug score.team_id %}">
+                    <input type="submit" value="Start round for team {{ score.team_id }}"></input>
+                {% csrf_token %}
+                </form>
+                Current score: {{ score.value }}
+            </li>
+        {% endfor %}
+        </ul>
+
+    </body>
+</html>

@@ -1,0 +1,9 @@
+{% extends "boom/base.html" %}
+
+{% block content %}
+    {{ game.get_active_cards | json_script:"cards" }}
+    <script language="javascript">
+        var cards = JSON.parse(document.getElementById('cards').textContent);
+        alert(JSON.stringify(cards));
+    </script>
+{% endblock %}
