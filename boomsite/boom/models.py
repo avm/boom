@@ -21,7 +21,7 @@ class Game(models.Model):
 
     def get_scores(self):
         scores = list(self.score_set.all().order_by('team_id').values())
-        last_id = scores[-1].team_id if scores else 0
+        last_id = scores[-1]['team_id'] if scores else 0
         scores.append({'team_id': last_id+1, 'value': 0})
         return scores
 

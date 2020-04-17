@@ -76,6 +76,17 @@
               next_card: function() {
                   if (cards.length > 0) {
                       this.current_card = cards.pop();
+                      fetch('/win', {
+                          method: 'POST',
+                          headers: {
+                              'Content-Type': 'application/json',
+                              'X-CSRFToken': csrfToken,
+                          },
+                          body: JSON.stringify({
+                              our_team: {{ our_team }},
+                              show_card: this.current_card.id,
+                          })
+                      });
                   }
               },
           },
