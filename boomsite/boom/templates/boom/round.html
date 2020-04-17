@@ -10,29 +10,34 @@
     {% verbatim %}
     <div id="app">
         <p>Time left: {{ seconds_left }}</p>
-        <button v-show="!playing" v-on:click="start" id="start">Start</button>
+        <p>Cards left: {{ cards.length }}</p>
+        <button v-show="!playing&&!done" v-on:click="start" id="start">Start</button>
         <div v-show="playing">
             <div style="font-size: 32px">{{ current_card.name }}</div>
             <button v-on:click="next" id="next">Next</button>
         </div>
-    </div>
     {% endverbatim %}
+        <div v-show="done">
+            Round complete. <a href="{% url 'game' game.slug %}">Back to game</a>
+        </div>
+    </div>
 
     <script language="javascript">
-        var cards = JSON.parse(document.getElementById('cards').textContent);
         var csrfToken = document.getElementsByTagName('input')[0].value;
         var app = new Vue({
           el: '#app',
           data: {
               playing: false,
+              done: false,
               current_card: 'Incognito',
               seconds_left: 60,
               deadline: null,
               timer: null,
+              cards: JSON.parse(document.getElementById('cards').textContent),
           },
           methods: {
               start: function() {
-                  cards.reverse();
+                  this.cards.reverse();
                   this.next_card();
                   this.playing = true;
                   Vue.nextTick(() => {
@@ -52,6 +57,7 @@
               },
               stop: function() {
                   this.playing = false;
+                  this.done = true;
                   if (this.timer) {
                       clearInterval(this.timer);
                       this.timer = null;
@@ -74,8 +80,8 @@
                   this.next_card();
               },
               next_card: function() {
-                  if (cards.length > 0) {
-                      this.current_card = cards.pop();
+                  if (this.cards.length > 0) {
+                      this.current_card = this.cards.pop();
                       fetch('/win', {
                           method: 'POST',
                           headers: {
@@ -87,6 +93,8 @@
                               show_card: this.current_card.id,
                           })
                       });
+                  } else {
+                      this.stop();
                   }
               },
           },
