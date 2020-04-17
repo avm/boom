@@ -39,6 +39,7 @@ def start_game(request, game_id):
 		messages.add_message(request, messages.ERROR, 'Not enough cards to start game.')
 	elif game.state == Game.State.POPULATING:
 		game.state = Game.State.PLAYING
+		game.start_set()
 		game.save()
 	return redirect('game', game_id)
 
@@ -50,7 +51,6 @@ def start_round(request, game_id, team_id):
 
 def win_card(request):
 	body = json.loads(request.body)
-	print('body:', body)
 	win_card = body.get('win_card')
 	if win_card is not None:
 		card = get_object_or_404(Card, pk=win_card)
@@ -60,6 +60,10 @@ def win_card(request):
 		score.value += 1
 		score.save()
 		card.save()
+		remaining = card.game.card_set.filter(winning_team=0).count()
+		if remaining == 0:
+			card.game.start_set()
+			card.game.save()
 	show_card = body.get('show_card')
 	if show_card:
 		# Move it into the back of the deck

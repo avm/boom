@@ -15,6 +15,7 @@ class Game(models.Model):
         choices=State.choices,
         default=State.POPULATING,
     )
+    stage_number = models.IntegerField(default=0)
 
     def card_count(self):
         return self.card_set.all().count()
@@ -31,6 +32,7 @@ class Game(models.Model):
             c.order = random.randint(1, 1<<20)
             c.winning_team = 0
         Card.objects.bulk_update(cards, ['order', 'winning_team'])
+        self.stage_number += 1
 
     def get_active_cards(self):
         return list(self.card_set.filter(winning_team=0).order_by('order').values('id', 'name'))
