@@ -3,6 +3,9 @@
 {% block content %}
     {{ game.get_active_cards | json_script:"cards" }}
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <form action="#">
+        {% csrf_token %}
+    </form>
 
     {% verbatim %}
     <div id="app">
@@ -17,6 +20,7 @@
 
     <script language="javascript">
         var cards = JSON.parse(document.getElementById('cards').textContent);
+        var csrfToken = document.getElementsByTagName('input')[0].value;
         var app = new Vue({
           el: '#app',
           data: {
@@ -55,7 +59,18 @@
                   }
               },
               next: function() {
-                  fetch('/win/{{ our_team }}/' + this.current_card.id);
+                  fetch('/win', {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json',
+                          'X-CSRFToken': csrfToken,
+                      },
+                      body: JSON.stringify({
+                          our_team: {{ our_team }},
+                          win_card: this.current_card.id,
+                      })
+                  });
+
                   this.next_card();
               },
               next_card: function() {
