@@ -1,15 +1,25 @@
 {% extends "boom/base.html" %}
 
 {% block content %}
+        <h1>Бум!</h1>
         <p>Добавлено карт: {{ game.card_set.all.count }}
         <a href="{% url 'game' game.slug %}">Обновить</a></p>
 
-        <p>Добавить карты:</p>
-        <form method="POST" rows="10" columns="30" action="{% url 'add_cards' game_id=game.slug %}">
-        <textarea name="cards" placeholder="Имена на отдельных строчках"></textarea>
-        <input type="submit" value="Отправить"></input>
-        {% csrf_token %}
-        </form>
+        <div class="card">
+            <div class="card-body">
+                <form method="POST" action="{% url 'add_cards' game_id=game.slug %}">
+                    <div class="form-group">
+                        <label for="cards">Добавить карты:</label>
+                        <textarea name="cards" id="cards"
+                            class="form-control" rows="10" cols="40"
+                            placeholder="Имена на отдельных строчках"></textarea>
+                    </div>
+                    <input type="submit" class="btn btn-outline-primary" value="Отправить"></input>
+                    {% csrf_token %}
+                </form>
+            </div>
+        </div>
 
-        <a href="{% url 'start_game' game_id=game.slug %}">Начать игру</a>
+        <p style="margin-top: 2em"><a class="btn btn-primary btn-lg btn-block"
+              href="{% url 'start_game' game_id=game.slug %}">Начать игру</a></p>
 {% endblock %}

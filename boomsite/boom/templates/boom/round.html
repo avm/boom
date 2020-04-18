@@ -9,17 +9,21 @@
 
     {% verbatim %}
     <div id="app">
-        <p>Осталось секунд: {{ seconds_left }}</p>
-        <p>Осталось карт: {{ cards.length }}</p>
-        <button v-show="!playing&&!done" v-on:click="start" id="start">Start</button>
-        <div v-show="playing">
-            <div style="font-size: 32px">{{ current_card.name }}</div>
-            <button v-on:click="next" id="next">Угадали</button>
-        </div>
+        <div class="card mx-auto" style="width: 30rem"><div class="card-body">
+            <div class="row">
+                <p class="col-sm">Осталось секунд: {{ seconds_left }}</p>
+                <p class="col-sm">Осталось карт: {{ cards.length }}</p>
+            </div>
+            <div style="font-size: 32px; text-align: center; min-height: 5rem">{{ current_card.name }}</div>
+            <button v-show="!playing&&!done" v-on:click="start" autofocus
+                class="btn btn-primary btn-block" id="start">Пуск</button>
+            <div v-show="playing">
+                <button v-on:click="next" class="btn btn-outline-primary btn-block" id="next">Угадали</button>
+            </div>
     {% endverbatim %}
-        <div v-show="done">
-            Объяснение закончено. <a href="{% url 'game' game.slug %}">Посмотреть счёт</a>
-        </div>
+            <a v-show="done" id="done" class="btn btn-primary btn-block"
+                href="{% url 'game' game.slug %}">Посмотреть счёт</a>
+            </div></div>
     </div>
 
     <script language="javascript">
@@ -29,7 +33,7 @@
           data: {
               playing: false,
               done: false,
-              current_card: {name: 'Incognito'},
+              current_card: {name: ''},
               seconds_left: 60,
               deadline: null,
               timer: null,
@@ -58,6 +62,10 @@
               stop: function() {
                   this.playing = false;
                   this.done = true;
+                  this.current_card.name = '';
+                  Vue.nextTick(() => {
+                      document.getElementById('done').focus();
+                  });
                   if (this.timer) {
                       clearInterval(this.timer);
                       this.timer = null;

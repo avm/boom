@@ -1,17 +1,18 @@
 {% extends "boom/base.html" %}
 
 {% block content %}
-        <p>Раунд {{ game.stage_number }}</p>
+    <h1>Раунд {{ game.stage_number }}</h1>
 
-        <ul>
-        {% for score in game.get_scores %}
-            <li>
-                <form method="POST" action="{% url 'start_round' game.slug score.team_id %}">
-                    <input type="submit" value="Объяснять за команду {{ score.team_id }}"></input>
-                {% csrf_token %}
-                </form>
-                Счёт: {{ score.value }}
-            </li>
-        {% endfor %}
-        </ul>
+    {% for score in game.get_scores %}
+    <div class="card">
+        <div class="card-body">
+            <h3 class="card-title">Команда {{ score.team_id }}</h3>
+            <p>Счёт: {{ score.value }}</p>
+            <form method="POST" action="{% url 'start_round' game.slug score.team_id %}">
+                <input type="submit" class="btn btn-outline-primary" value="Играем"></input>
+            {% csrf_token %}
+            </form>
+        </div>
+    </div>
+    {% endfor %}
 {% endblock %}
