@@ -9,16 +9,16 @@
 
     {% verbatim %}
     <div id="app">
-        <p>Time left: {{ seconds_left }}</p>
-        <p>Cards left: {{ cards.length }}</p>
+        <p>Осталось секунд: {{ seconds_left }}</p>
+        <p>Осталось карт: {{ cards.length }}</p>
         <button v-show="!playing&&!done" v-on:click="start" id="start">Start</button>
         <div v-show="playing">
             <div style="font-size: 32px">{{ current_card.name }}</div>
-            <button v-on:click="next" id="next">Next</button>
+            <button v-on:click="next" id="next">Угадали</button>
         </div>
     {% endverbatim %}
         <div v-show="done">
-            Round complete. <a href="{% url 'game' game.slug %}">Back to game</a>
+            Объяснение закончено. <a href="{% url 'game' game.slug %}">Посмотреть счёт</a>
         </div>
     </div>
 
@@ -29,7 +29,7 @@
           data: {
               playing: false,
               done: false,
-              current_card: 'Incognito',
+              current_card: {name: 'Incognito'},
               seconds_left: 60,
               deadline: null,
               timer: null,

@@ -1,23 +1,15 @@
-<!doctype html>
-<html>
-    <body>
-        {% if messages %}
-        <ul class="messages">
-            {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
+{% extends "boom/base.html" %}
 
-        <p>Game {{ game.slug }} has {{ game.card_set.all.count }} cards
-        <a href="{% url 'game' game.slug %}">Refresh</a></p>
+{% block content %}
+        <p>Добавлено карт: {{ game.card_set.all.count }}
+        <a href="{% url 'game' game.slug %}">Обновить</a></p>
 
-        <form method="POST" action="{% url 'add_cards' game_id=game.slug %}">
-        <textarea name="cards" placeholder="One name per line"></textarea>
-        <input type="submit"></input>
+        <p>Добавить карты:</p>
+        <form method="POST" rows="10" columns="30" action="{% url 'add_cards' game_id=game.slug %}">
+        <textarea name="cards" placeholder="Имена на отдельных строчках"></textarea>
+        <input type="submit" value="Отправить"></input>
         {% csrf_token %}
         </form>
 
-        <a href="{% url 'start_game' game_id=game.slug %}">Start game</a>
-    </body>
-</html>
+        <a href="{% url 'start_game' game_id=game.slug %}">Начать игру</a>
+{% endblock %}
