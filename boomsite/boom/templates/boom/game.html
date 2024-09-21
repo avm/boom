@@ -8,8 +8,8 @@
         <div class="card">
             <div class="card-body">
                 <form method="POST" action="{% url 'add_cards' game_id=game.slug %}">
-                    <div class="form-group">
-                        <label for="cards">Добавить карты:</label>
+                    <div class="mb-3">
+                        <label for="cards" class="form-label">Добавить карты:</label>
                         <textarea name="cards" id="cards"
                             class="form-control" rows="10" cols="40"
                             placeholder="Имена на отдельных строчках"></textarea>

@@ -15,10 +15,10 @@
                 <p class="col-sm">Осталось карт: {{ cards.length }}</p>
             </div>
             <div style="font-size: 32px; text-align: center; min-height: 5rem">{{ current_card.name }}</div>
-            <button v-show="!playing&&!done" v-on:click="start" autofocus
-                class="btn btn-primary btn-block" id="start">Пуск</button>
-            <div v-show="playing">
-                <button v-on:click="next" class="btn btn-outline-primary btn-block" id="next">Угадали</button>
+            <div class="d-grid">
+                <button v-on:click="start" autofocus v-show="!playing&&!done"
+                    class="btn btn-primary" id="start">Пуск</button>
+                <button v-show="playing" v-on:click="next" class="btn btn-outline-primary" id="next">Угадали</button>
             </div>
     {% endverbatim %}
             <a v-show="done" id="done" class="btn btn-primary btn-block"
